@@ -9,6 +9,7 @@ export async function run(): Promise<void> {
     try {
         const branchToEnvMap = core.getInput('branch-to-env-map', { required: true }).split('\n')
                                    .map(x => x.trim().split('=')).reduce<Record<string, string>>((acc, curr) => {
+                                       console.log(curr)
                 acc[curr[0]] = acc[curr[1]];
                 return acc;
             }, {});

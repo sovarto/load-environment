@@ -29232,6 +29232,7 @@ async function run() {
     try {
         const branchToEnvMap = core.getInput('branch-to-env-map', { required: true }).split('\n')
             .map(x => x.trim().split('=')).reduce((acc, curr) => {
+            console.log(curr);
             acc[curr[0]] = acc[curr[1]];
             return acc;
         }, {});
