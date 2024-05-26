@@ -29238,7 +29238,7 @@ async function run() {
         const branch = github.context.ref.replace('refs/heads/', '');
         const envValue = branchToEnvMap[branch];
         if (!envValue) {
-            core.setFailed(`No environment value mapped for branch: ${branch}`);
+            core.setFailed(`No environment value mapped for branch '${branch}'. Available mappings: ${JSON.stringify(branchToEnvMap)}`);
             return;
         }
         core.exportVariable('ENV', envValue);
