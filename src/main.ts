@@ -1,0 +1,45 @@
+import * as core from '@actions/core';
+import * as github from '@actions/github';
+
+/**
+ * The main function for the action.
+ * @returns {Promise<void>} Resolves when the action is complete.
+ */
+export async function run(): Promise<void> {
+    try {
+        const branchToEnvMap = core.getInput('branch-to-env-map', { required: true }).split('\n')
+                                   .map(x => x.trim().split('=')).reduce<Record<string, string>>((acc, curr) => {
+                acc[curr[0]] = acc[curr[1]];
+                return acc;
+            }, {});
+
+        const branch = github.context.ref.replace('refs/heads/', '');
+        const envValue = branchToEnvMap[branch];
+
+        if (!envValue) {
+            core.setFailed(`No environment value mapped for branch: ${ branch }`);
+            return;
+        }
+
+        core.exportVariable('ENV', envValue);
+        core.info(`Set ENV to ${ envValue } for branch ${ branch }`);
+
+        for (const key of Object.keys(process.env)) {
+            const envPrefix = envValue.toUpperCase();
+            if (key.startsWith(`${ envPrefix }_`)) {
+                const newKey = key.replace(`${ envPrefix }_`, '');
+                const value = process.env[key];
+                core.exportVariable(newKey, value);
+                core.info(`Loaded ${ key } into ${ newKey }`);
+            }
+        }
+    } catch (error) {
+        if (error instanceof Error) {
+            core.setFailed(error.message);
+        } else {
+            core.setFailed(`Unknown error of type '${ typeof error }${ typeof error === 'object'
+                                                                       ? ` / ${ error!.constructor.name }`
+                                                                       : '' }' occurred:\n\n${ error }`);
+        }
+    }
+}

@@ -1,0 +1,16 @@
+name: 'Detect and load environment'
+description: 'Detects the environment based on the branch and loads the specified secrets and variables of it'
+author: 'Sovarto GmbH'
+
+branding:
+  icon: 'cloud'
+  color: 'blue'
+
+inputs:
+  branch-to-env-map:
+    description: 'A map from the branch name to the environment name. Add lines with the format branch=environment'
+    required: true
+
+runs:
+  using: node20
+  main: dist/index.js
