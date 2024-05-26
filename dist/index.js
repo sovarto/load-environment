@@ -29230,12 +29230,16 @@ const github = __importStar(__nccwpck_require__(5438));
  */
 async function run() {
     try {
-        const branchToEnvMap = core.getInput('branch-to-env-map', { required: true }).split('\n')
-            .map(x => x.trim().split('=')).reduce((acc, curr) => {
+        const branchToEnvMap = core.getInput('branch-to-env-map', { required: true })
+            .split('\n')
+            .map(x => x.trim().split('='))
+            .reduce((acc, curr) => {
             console.log(curr);
-            acc[curr[0]] = acc[curr[1]];
+            acc[curr[0]] = curr[1];
+            console.log(acc);
             return acc;
         }, {});
+        console.log(branchToEnvMap);
         const branch = github.context.ref.replace('refs/heads/', '');
         const envValue = branchToEnvMap[branch];
         if (!envValue) {

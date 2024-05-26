@@ -7,18 +7,22 @@ import * as github from '@actions/github';
  */
 export async function run(): Promise<void> {
     try {
-        const branchToEnvMap = core.getInput('branch-to-env-map', { required: true }).split('\n')
-                                   .map(x => x.trim().split('=')).reduce<Record<string, string>>((acc, curr) => {
-                                       console.log(curr)
-                acc[curr[0]] = acc[curr[1]];
-                return acc;
-            }, {});
-
+        const branchToEnvMap = core.getInput('branch-to-env-map', { required: true })
+                                   .split('\n')
+                                   .map(x => x.trim().split('='))
+                                   .reduce<Record<string, string>>((acc, curr) => {
+                                       console.log(curr);
+                                       acc[curr[0]] = curr[1];
+                                       console.log(acc);
+                                       return acc;
+                                   }, {});
+        console.log(branchToEnvMap);
         const branch = github.context.ref.replace('refs/heads/', '');
         const envValue = branchToEnvMap[branch];
 
         if (!envValue) {
-            core.setFailed(`No environment value mapped for branch '${ branch }'. Available mappings: ${JSON.stringify(branchToEnvMap)}`);
+            core.setFailed(`No environment value mapped for branch '${ branch }'. Available mappings: ${ JSON.stringify(
+                branchToEnvMap) }`);
             return;
         }
 
