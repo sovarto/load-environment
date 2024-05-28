@@ -11,12 +11,9 @@ export async function run(): Promise<void> {
                                    .split('\n')
                                    .map(x => x.trim().split('='))
                                    .reduce<Record<string, string>>((acc, curr) => {
-                                       console.log(curr);
                                        acc[curr[0]] = curr[1];
-                                       console.log(acc);
                                        return acc;
                                    }, {});
-        console.log(branchToEnvMap);
         const branch = github.context.ref.replace('refs/heads/', '');
         const envValue = branchToEnvMap[branch];
 
