@@ -24,7 +24,8 @@ export async function run(): Promise<void> {
         }
 
         core.exportVariable('ENV', envValue);
-        core.info(`Set ENV to ${ envValue } for branch ${ branch }`);
+        core.exportVariable('NODE_ENV', envValue);
+        core.info(`Set ENV and NODE_ENV to ${ envValue } for branch ${ branch }`);
 
         for (const key of Object.keys(process.env)) {
             const envPrefix = envValue.toUpperCase();
@@ -33,6 +34,8 @@ export async function run(): Promise<void> {
                 const value = process.env[key];
                 core.exportVariable(newKey, value);
                 core.info(`Loaded ${ key } into ${ newKey }`);
+                if(value === undefined || value === "")
+                    core.warning(`Value for ${newKey} is undefined or empty`)
             }
         }
     } catch (error) {
