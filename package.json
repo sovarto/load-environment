@@ -34,9 +34,9 @@
     "@sovarto/cdktf-state": "^0.0.16"
   },
   "devDependencies": {
-    "@types/node": "^20.12.12",
+    "@types/node": "^20.14.8",
     "@vercel/ncc": "^0.38.1",
     "linefix": "^0.1.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.2"
   }
 }
